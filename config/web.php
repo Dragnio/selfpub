@@ -41,6 +41,26 @@ $config = [
             ],
         ],
         'db'           => $db,
+        'urlManager'   => [
+            'showScriptName'  => false,
+            'enablePrettyUrl' => true,
+            'suffix'          => '.html',
+            'rules'           => [
+                //default
+                [
+                    'pattern' => '<controller:\w+>/<action:\w+>',
+                    'route'   => '<controller>/<action>'
+                ],
+                [
+                    'pattern' => '<module:\w+>/<controller:\w+>',
+                    'route'   => '<module>/<controller>/index'
+                ],
+                [
+                    'pattern' => '<module:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>',
+                    'route'   => '<module>/<controller>/<action>'
+                ],
+            ]
+        ],
     ],
     'params'     => $params,
 ];

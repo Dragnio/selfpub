@@ -2,23 +2,26 @@
 
 namespace app\models;
 
+use app\components\ActiveRecord;
 use Yii;
-use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "Users".
  *
- * @property integer $id
- * @property string $login
- * @property string $role
- * @property string $passwordHash
- * @property string $passwordSalt
- * @property string $authKey
- * @property string $name
- * @property string $email
- * @property string $avatar
- * @property integer $dateAdded
- * @property integer $status
+ * @property integer   $id
+ * @property string    $login
+ * @property string    $role
+ * @property string    $passwordHash
+ * @property string    $passwordSalt
+ * @property string    $authKey
+ * @property string    $name
+ * @property string    $email
+ * @property string    $avatar
+ * @property integer   $dateAdded
+ * @property integer   $status
+ *
+ * @property Request[] $requests
+ * @property Comment[] $comments
  */
 class User extends ActiveRecord
 {
@@ -61,5 +64,21 @@ class User extends ActiveRecord
             'dateAdded'    => Yii::t('app', 'Date Added'),
             'status'       => Yii::t('app', 'Status'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRequests()
+    {
+        return $this->hasMany(Request::className(), ['userId' => 'id'])->inverseOf('user');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getComments()
+    {
+        return $this->hasMany(Comment::className(), ['userId' => 'id'])->inverseOf('user');
     }
 }

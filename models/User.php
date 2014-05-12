@@ -3,6 +3,8 @@
 namespace app\models;
 
 use app\components\ActiveRecord;
+use app\components\UserIdentity;
+use app\helpers\PasswordHelper;
 use Yii;
 
 /**
@@ -80,5 +82,55 @@ class User extends ActiveRecord
     public function getComments()
     {
         return $this->hasMany(Comment::className(), ['userId' => 'id'])->inverseOf('user');
+    }
+
+    /**
+     * @param $login
+     * @param $password
+     *
+     * @return bool
+     */
+    public static function auth($login, $password)
+    {
+        $user = self::getUserByLogin($login);
+        if ($user) {
+            $identity = new UserIdentity(
+                [
+                    'username' => $user->login,
+                    'password' => $password,
+                    'user'     => $user
+                ]
+            );
+            if ($identity->validatePassword()) {
+                \Yii::$app->user->login($identity, 86400);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $login
+     *
+     * @return static
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function getUserByLogin($login)
+    {
+        return User::findOne(['login' => $login]);
+    }
+
+    /**
+     * @param $password
+     *
+     * @return bool
+     */
+    public function validatePassword($password)
+    {
+        $hash = PasswordHelper::generateCompiledPassHash($password, $this->passwordSalt);
+
+        return $hash == $this->passwordHash;
     }
 }

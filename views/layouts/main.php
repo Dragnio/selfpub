@@ -43,7 +43,7 @@ AppAsset::register($this);
                 ['label' => 'About', 'url' => ['/site/about']],
                 ['label' => 'Contact', 'url' => ['/site/contact']],
                 [
-                    'label'   => 'Logout (' . Yii::$app->user->isGuest ? '' : \Yii::$app->user->identity->user->name . ')',
+                    'label'   => 'Logout (' . (Yii::$app->user->isGuest ? '' : \Yii::$app->user->identity->user->name) . ')',
                     'url'     => ['/site/logout'],
                     'visible' => !\Yii::$app->user->isGuest
                 ],

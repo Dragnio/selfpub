@@ -42,9 +42,10 @@ AppAsset::register($this);
                 ['label' => 'Home', 'url' => ['/site/index']],
                 ['label' => 'About', 'url' => ['/site/about']],
                 ['label' => 'Contact', 'url' => ['/site/contact']],
-                ['label'   => 'Logout (' . \Yii::$app->user->identity->user->name . ')',
-                 'url'     => ['/site/logout'],
-                 'visible' => !\Yii::$app->user->isGuest
+                [
+                    'label'   => 'Logout (' . Yii::$app->user->isGuest ? '' : \Yii::$app->user->identity->user->name . ')',
+                    'url'     => ['/site/logout'],
+                    'visible' => !\Yii::$app->user->isGuest
                 ],
             ],
         ]

@@ -41,7 +41,7 @@ AppAsset::register($this);
             'items'   => [
                 ['label' => 'Home', 'url' => ['/site/index']],
                 ['label' => 'About', 'url' => ['/site/about']],
-                ['label' => 'Contact', 'url' => ['/site/contact']],
+                ['label' => 'Add Request', 'url' => ['/requests/add'], 'visible' => !\Yii::$app->user->isGuest],
                 [
                     'label'   => 'Logout (' . (Yii::$app->user->isGuest ? '' : \Yii::$app->user->identity->user->name) . ')',
                     'url'     => ['/site/logout'],

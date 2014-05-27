@@ -1,14 +1,34 @@
 <?php
 /**
  * @var \app\models\Request $request
+ * @var \yii\web\View       $this
  */
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
 $this->title = "Добавить запрос";
-$form = ActiveForm::begin();
+$form = ActiveForm::begin(
+    [
+        'action' => \Yii::$app->urlManager->createUrl(['requests/request-form-proceed', 'requestId' => $request->id])
+    ]
+);
 ?>
     <h1>Add Request</h1>
+<?php
+if ($request->errors) {
+    ?>
+    <div class="well">
+        <?php
+        foreach ($request->errors as $field => $error) {
+            ?>
+            <p><?= implode("<br />", $error) ?></p>
+        <?php
+        }
+        ?>
+    </div>
+<?php
+}
+?>
 <?= $form->field($request, 'bookName')->textInput() ?>
 <?= $form->field($request, 'authorName')->textInput() ?>
 <?= $form->field($request, 'synopsis')->textInput() ?>

@@ -131,8 +131,8 @@ class Request extends ActiveRecord
             'file'         => 'Файл книги',
             'platforms'    => 'Платформы',
             'cost'         => 'Цена',
-            'dateAdded'    => 'Date Added',
-            'status'       => 'Status',
+            'dateAdded'    => 'Дата добавления',
+            'status'       => 'Статус',
         ];
     }
 

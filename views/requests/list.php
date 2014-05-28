@@ -15,12 +15,20 @@ echo GridView::widget(
         'dataProvider' => $dataProvider,
         'columns'      => [
             'id',
-            ['attribute'=>'user.name','label'=>'Пользователь'],
+            ['attribute' => 'user.name', 'label' => 'Пользователь'],
             'bookName',
             [
                 'attribute' => 'dateAdded',
                 'value'     => function ($model, $index, $widget) {
                     return date("d.m.Y H:i:s", $model->dateAdded);
+                }
+            ],
+            [
+                'attribute' => 'status',
+                'format'    => 'html',
+                'value'     => function ($model, $index, $widget) {
+                    return '<span
+                    class="label label-' . Request::$statusClasses[$model->status] . '">' . Request::$statuses[$model->status] . '</span>';
                 }
             ],
             [

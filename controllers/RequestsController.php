@@ -114,7 +114,8 @@ class RequestsController extends Controller
                 'attributes'   => [
                     'id',
                     'dateAdded',
-                    'bookName'
+                    'bookName',
+                    'status'
                 ],
                 'defaultOrder' => [
                     'dateAdded' => SORT_DESC

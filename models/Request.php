@@ -48,6 +48,25 @@ class Request extends ActiveRecord
         'gif'
     ];
 
+    const STATUS_WAITING = 0;
+    const STATUS_IN_PROCESS = 1;
+    const STATUS_ACCEPTED = 2;
+    const STATUS_DECLINED = 3;
+
+    public static $statuses = [
+        self::STATUS_WAITING    => 'Не рассмотрено',
+        self::STATUS_IN_PROCESS => 'В процессе',
+        self::STATUS_ACCEPTED   => 'Завершено и принято',
+        self::STATUS_DECLINED   => 'Завершено и отклонено',
+    ];
+
+    public static $statusClasses = [
+        self::STATUS_WAITING    => 'default',
+        self::STATUS_IN_PROCESS => 'warning',
+        self::STATUS_ACCEPTED   => 'success',
+        self::STATUS_DECLINED   => 'danger',
+    ];
+
     /**
      * @inheritdoc
      */
@@ -71,13 +90,19 @@ class Request extends ActiveRecord
                     'participants',
                     'language',
                     'tags',
-                    'cover',
-                    'file',
                     'platforms',
                     'cost',
                     'dateAdded'
                 ],
                 'required'
+            ],
+            [
+                [
+                    'cover',
+                    'file'
+                ],
+                'required',
+                'on' => 'create'
             ],
             [['userId', 'language', 'dateAdded', 'status'], 'integer'],
             [['participants', 'tags', 'platforms'], 'string'],

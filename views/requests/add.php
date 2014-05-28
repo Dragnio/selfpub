@@ -1,8 +1,9 @@
 <?php
 /**
- * @var \app\models\Request $request
- * @var \yii\web\View       $this
+ * @var Request       $request
+ * @var \yii\web\View $this
  */
+use app\models\Request;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
@@ -13,6 +14,7 @@ $form = ActiveForm::begin(
         'options' => array('enctype' => 'multipart/form-data')
     ]
 );
+$canEdit = $this->context->user->role == 'admin' || ($this->context->user->id == $request->userId && $request->status < Request::STATUS_IN_PROCESS);
 ?>
 <?php
 if ($request->errors) {
@@ -31,22 +33,30 @@ if ($request->errors) {
 ?>
     <div class="row">
         <div class="col-lg-6">
-            <?= $form->field($request, 'bookName')->textInput() ?>
+            <?= $form->field($request, 'bookName')->textInput(['disabled' => !$canEdit]) ?>
+        </div>
+        <div class="col-lg-6">
+            <p class="pull-right"><span
+                    class="label label-<?= Request::$statusClasses[$request->status] ?>"><?= Request::$statuses[$request->status] ?></span>
+            </p>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <?= $form->field($request, 'authorName')->textInput() ?>
+            <?= $form->field($request, 'authorName')->textInput(['disabled' => !$canEdit]) ?>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <?= $form->field($request, 'synopsis')->textarea() ?>
+            <?= $form->field($request, 'synopsis')->textarea(['disabled' => !$canEdit]) ?>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <?= $form->field($request, 'participants')->hint('Вася - Художник<br />Петя - Писатель')->textarea() ?>
+            <?=
+            $form->field($request, 'participants')->hint('Вася - Художник<br />Петя - Писатель')->textarea(
+                ['disabled' => !$canEdit]
+            ) ?>
         </div>
     </div>
     <div class="row">
@@ -56,23 +66,28 @@ if ($request->errors) {
                 [
                     'Русский',
                     'Английский'
-                ]
+                ],
+                ['disabled' => !$canEdit]
             ) ?>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <?= $form->field($request, 'license')->textInput() ?>
+            <?=
+            $form->field($request, 'license')->radioList(
+                ['Своя книга', 'Общественное достояние'],
+                ['disabled' => !$canEdit]
+            ) ?>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <?= $form->field($request, 'category')->textInput() ?>
+            <?= $form->field($request, 'category')->textInput(['disabled' => !$canEdit]) ?>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <?= $form->field($request, 'tags')->textInput() ?>
+            <?= $form->field($request, 'tags')->textInput(['disabled' => !$canEdit]) ?>
         </div>
     </div>
     <div class="row">
@@ -82,14 +97,14 @@ if ($request->errors) {
             if ($request->cover != '') {
                 $coverField->hint('Загружен файл ' . $request->cover);
             }
-            echo $coverField->fileInput();
+            echo $coverField->fileInput(['disabled' => !$canEdit]);
             ?>
             <?php
             $fileField = $form->field($request, 'file');
             if ($request->file != '') {
                 $fileField->hint('Загружен файл ' . $request->file);
             }
-            echo $fileField->fileInput();
+            echo $fileField->fileInput(['disabled' => !$canEdit]);
             if ($request->file != '') {
                 ?>
                 <a class="btn btn-success" href="<?= $request->getFileUrl() ?>">Скачать</a><br/><br/>
@@ -102,7 +117,8 @@ if ($request->errors) {
                     'Amazon',
                     'Amazon2',
                     'Amazon3'
-                ]
+                ],
+                ['disabled' => !$canEdit]
             ) ?>
         </div>
         <div class="col-lg-6">
@@ -118,9 +134,24 @@ if ($request->errors) {
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <?= $form->field($request, 'cost')->textInput() ?>
+            <?= $form->field($request, 'cost')->textInput(['disabled' => !$canEdit]) ?>
         </div>
     </div>
-<?= Html::submitButton('Add', ['class' => 'btn btn-primary']) ?>
+<?php
+if (\Yii::$app->user->identity->user->role == 'admin') {
+    ?>
+    <h2>Управление</h2>
+    <div class="row">
+        <div class="col-lg-6">
+            <?= $form->field($request, 'status')->dropDownList(Request::$statuses) ?>
+        </div>
+    </div>
+<?php
+}
+?>
+<?= Html::submitButton(
+    $request->isNewRecord ? 'Добавить' : 'Сохранить',
+    ['class' => 'btn btn-primary', 'disabled' => !$canEdit]
+) ?>
 <?php
 $form->end();

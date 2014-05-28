@@ -2,10 +2,10 @@
 
 namespace app\controllers;
 
+use app\components\Controller;
 use app\models\Request;
 use yii\filters\AccessControl;
 use yii\helpers\FileHelper;
-use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\UploadedFile;
 
@@ -48,25 +48,32 @@ class RequestsController extends Controller
             $request = new Request();
             $request->userId = \Yii::$app->user->identity->user->id;
             $request->dateAdded = time();
+            $request->status = Request::STATUS_WAITING;
         }
+        $oldFile = $request->file;
+        $oldCover = $request->cover;
 
         if (\Yii::$app->request->isPost) {
             $request->load(\Yii::$app->request->post());
             $file = UploadedFile::getInstance($request, 'file');
-            if (!in_array($file->extension, Request::$fileExtensions)) {
+            if ($file->size > 0 && !in_array($file->extension, Request::$fileExtensions)) {
                 $request->addError(
                     'file',
                     'Файл книги должен быть в одном из следующих форматов: ' . implode(',', Request::$fileExtensions)
                 );
+            } elseif ($file->size == 0 && !$request->isNewRecord) {
+                $request->file = $oldFile;
             } else {
                 $request->file = $file->name;
             }
             $cover = UploadedFile::getInstance($request, 'cover');
-            if (!in_array($cover->extension, Request::$coverExtensions)) {
+            if ($cover->size > 0 && !in_array($cover->extension, Request::$coverExtensions)) {
                 $request->addError(
                     'cover',
                     'Файл обложки должен быть в одном из следующих форматов: ' . implode(',', Request::$coverExtensions)
                 );
+            } elseif ($cover->size == 0 && !$request->isNewRecord) {
+                $request->cover = $oldCover;
             } else {
                 $request->cover = $cover->name;
             }

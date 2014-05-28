@@ -136,8 +136,19 @@ class Request extends ActiveRecord
         }
     }
 
+    /**
+     * @return string
+     */
     public function getCoverUrl()
     {
         return "/content/books/" . $this->id . "/" . $this->cover;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileUrl()
+    {
+        return "/content/books/" . $this->id . "/" . $this->file;
     }
 }

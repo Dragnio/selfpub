@@ -90,6 +90,11 @@ if ($request->errors) {
                 $fileField->hint('Загружен файл ' . $request->file);
             }
             echo $fileField->fileInput();
+            if ($request->file != '') {
+                ?>
+                <a class="btn" href="<?= $request->getFileUrl() ?>">Скачать</a>
+            <?php
+            }
             ?>
             <?=
             $form->field($request, 'platforms')->checkboxList(

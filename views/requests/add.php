@@ -92,7 +92,7 @@ if ($request->errors) {
             echo $fileField->fileInput();
             if ($request->file != '') {
                 ?>
-                <a class="btn btn-primary" href="<?= $request->getFileUrl() ?>">Скачать</a><br/><br/>
+                <a class="btn btn-success" href="<?= $request->getFileUrl() ?>">Скачать</a><br/><br/>
             <?php
             }
             ?>

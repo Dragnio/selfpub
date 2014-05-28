@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\components\ActiveRecord;
 use Yii;
+use yii\helpers\FileHelper;
 
 /**
  * This is the model class for table "Requests".
@@ -30,6 +31,23 @@ use Yii;
  */
 class Request extends ActiveRecord
 {
+
+    public static $fileExtensions = [
+        'pdf',
+        'epub',
+        'fb2',
+        'doc',
+        'docx'
+    ];
+
+    public static $coverExtensions = [
+        'jpg',
+        'jpeg',
+        'bmp',
+        'png',
+        'gif'
+    ];
+
     /**
      * @inheritdoc
      */
@@ -76,18 +94,18 @@ class Request extends ActiveRecord
         return [
             'id'           => 'ID',
             'userId'       => 'User ID',
-            'bookName'     => 'Book Name',
-            'authorName'   => 'Author Name',
-            'synopsis'     => 'Synopsis',
-            'participants' => 'Participants',
-            'language'     => 'Language',
-            'license'      => 'License',
-            'category'     => 'Category',
-            'tags'         => 'Tags',
-            'cover'        => 'Cover',
-            'file'         => 'File',
-            'platforms'    => 'Platforms',
-            'cost'         => 'Cost',
+            'bookName'     => 'Название книги',
+            'authorName'   => 'Имя автора',
+            'synopsis'     => 'Синопсис',
+            'participants' => 'Участники',
+            'language'     => 'Язык',
+            'license'      => 'Лицензия',
+            'category'     => 'Категория',
+            'tags'         => 'Тэги',
+            'cover'        => 'Обложка',
+            'file'         => 'Файл книги',
+            'platforms'    => 'Платформы',
+            'cost'         => 'Цена',
             'dateAdded'    => 'Date Added',
             'status'       => 'Status',
         ];
@@ -107,5 +125,14 @@ class Request extends ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'userId']);
+    }
+
+    public function afterSave($insert)
+    {
+        parent::afterSave($insert);
+        if ($insert) {
+            $dirName = ROOT_DIR . '/content/books/' . $this->id;
+            FileHelper::createDirectory($dirName);
+        }
     }
 }

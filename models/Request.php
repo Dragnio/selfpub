@@ -135,4 +135,9 @@ class Request extends ActiveRecord
             FileHelper::createDirectory($dirName);
         }
     }
+
+    public function getCoverUrl()
+    {
+        return "/content/books/" . $this->id . "/" . $this->cover;
+    }
 }

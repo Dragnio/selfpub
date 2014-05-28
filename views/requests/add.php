@@ -14,7 +14,7 @@ $form = ActiveForm::begin(
         'options' => array('enctype' => 'multipart/form-data')
     ]
 );
-$canEdit = $this->context->user->role == 'admin' || ($this->context->user->id == $request->userId && $request->status < Request::STATUS_IN_PROCESS);
+$canEdit = $this->context->user->can("admin") || ($this->context->user->id == $request->userId && $request->status < Request::STATUS_IN_PROCESS);
 ?>
 <?php
 if ($request->errors) {
@@ -138,7 +138,7 @@ if ($request->errors) {
         </div>
     </div>
 <?php
-if (\Yii::$app->user->identity->user->role == 'admin') {
+if ($this->context->user->can("admin")) {
     ?>
     <h2>Управление</h2>
     <div class="row">

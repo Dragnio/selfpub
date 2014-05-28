@@ -50,36 +50,4 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
-
-    public function actionLogin()
-    {
-        if (!\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        if (\Yii::$app->request->post('login', false) && \Yii::$app->request->post('password', false)) {
-            $login = \Yii::$app->request->post('login', false);
-            $password = \Yii::$app->request->post('password', false);
-            if (User::auth($login, $password)) {
-                if (Yii::$app->user->returnUrl != "/") {
-                    return $this->goBack();
-                } else {
-                    return $this->redirect("/");
-                }
-            } else {
-                \Yii::$app->session->setFlash('error', 'Неверный логин или пароль, попробуйте еще раз.');
-                return $this->goHome();
-            }
-        } else {
-            \Yii::$app->session->setFlash('error', 'Отсутвует логин или пароль');
-            return $this->goHome();
-        }
-    }
-
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
 }

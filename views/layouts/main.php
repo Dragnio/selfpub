@@ -51,31 +51,20 @@ AppAsset::register($this);
                     'visible' => !\Yii::$app->user->isGuest
                 ],
                 [
-                    'label'   => 'Logout (' . (Yii::$app->user->isGuest ? '' : \Yii::$app->user->identity->user->name) . ')',
-                    'url'     => ['/site/logout'],
+                    'label'   => 'Профиль',
+                    'url'     => ['/user/account'],
                     'visible' => !\Yii::$app->user->isGuest
                 ],
+                Yii::$app->user->isGuest ?
+                    ['label' => 'Войти', 'url' => ['/user/login']] :
+                    [
+                        'label'       => 'Выход',
+                        'url'         => ['/user/logout'],
+                        'linkOptions' => ['data-method' => 'post']
+                    ],
             ],
         ]
     );
-    if (\Yii::$app->user->isGuest) {
-        ?>
-        <div class="pull-right">
-            <?php
-            echo Html::beginForm(
-                \Yii::$app->urlManager->createUrl("site/login"),
-                'post',
-                ['class' => 'form-horizontal']
-            );
-            echo Html::textInput("login", '', ['placeholder' => 'Login', 'class' => 'form-control']);
-            echo Html::passwordInput("password", '', ['placeholder' => 'Password', 'class' => 'form-control']);
-            echo Html::submitButton("Login", ['class' => 'form-control btn btn-success']);
-            echo Html::endForm();
-            ?>
-        </div>
-    <?php
-    }
-
     NavBar::end();
     ?>
 

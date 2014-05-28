@@ -15,7 +15,7 @@ echo GridView::widget(
         'dataProvider' => $dataProvider,
         'columns'      => [
             'id',
-            ['attribute' => 'user.name', 'label' => 'Пользователь'],
+            ['attribute' => 'user.displayName', 'label' => 'Пользователь'],
             'bookName',
             [
                 'attribute' => 'dateAdded',

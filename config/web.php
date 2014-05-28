@@ -22,8 +22,7 @@ $config = [
             'database' => 5,
         ],
         'user'         => [
-            'identityClass'   => 'app\components\UserIdentity',
-            'enableAutoLogin' => true,
+            'class' => 'amnah\yii2\user\components\User',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -31,6 +30,10 @@ $config = [
         'mail'         => [
             'class'            => 'yii\swiftmailer\Mailer',
             'useFileTransport' => true,
+            'messageConfig'    => [
+                'from'    => ['admin@selfpub.bwhost.ru' => 'SelfPub'], // this is needed for sending emails
+                'charset' => 'UTF-8',
+            ]
         ],
         'log'          => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -61,6 +64,12 @@ $config = [
                     'route'   => '<module>/<controller>/<action>'
                 ],
             ]
+        ],
+    ],
+    'modules'    => [
+        'user' => [
+            'class' => 'amnah\yii2\user\Module',
+            // set custom module properties here ...
         ],
     ],
     'params'     => $params,

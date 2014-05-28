@@ -2,7 +2,8 @@
 
 namespace app\components;
 
-use app\models\User;
+use amnah\yii2\user\models\User;
+
 
 /**
  * Class Controller
@@ -18,9 +19,7 @@ class Controller extends \yii\web\Controller
     public function init()
     {
         parent::init();
-        if (!\Yii::$app->user->isGuest) {
-            $this->user = \Yii::$app->user->identity->user;
-        }
+        $this->user = \Yii::$app->user;
     }
 
 } 

@@ -18,7 +18,8 @@
         "yiisoft/yii2": "*",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
-        "yiisoft/yii2-redis": "dev-master"
+        "yiisoft/yii2-redis": "dev-master",
+        "amnah/yii2-user": "~2.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

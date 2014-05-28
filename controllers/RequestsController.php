@@ -43,13 +43,13 @@ class RequestsController extends Controller
             if (!$request) {
                 throw new HttpException(404);
             }
-            if ($request->userId != $this->user->id || $this->user->role != 'admin') {
+            if ($request->userId != $this->user->id && !$this->user->can("admin")) {
                 throw new HttpException(403);
             }
             $request->platforms = json_decode($request->platforms, true);
         } else {
             $request = new Request();
-            $request->userId = \Yii::$app->user->identity->user->id;
+            $request->userId = $this->user->id;
             $request->dateAdded = time();
             $request->status = Request::STATUS_WAITING;
         }
@@ -99,7 +99,7 @@ class RequestsController extends Controller
     public function actionList()
     {
         $query = Request::find();
-        if ($this->user->role != 'admin') {
+        if (!$this->user->can("admin")) {
             $query->andWhere(['userId' => $this->user->id]);
         }
         $sort = new Sort();
@@ -143,7 +143,7 @@ class RequestsController extends Controller
         if (!$request) {
             throw new HttpException(404);
         }
-        if ($request->userId != $this->user->id || $this->user->role != 'admin') {
+        if ($request->userId != $this->user->id && !$this->user->can("admin")) {
             throw new HttpException(403);
         }
         $request->delete();

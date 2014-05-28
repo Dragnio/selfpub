@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use amnah\yii2\user\models\User;
 use app\components\ActiveRecord;
 use Yii;
 use yii\helpers\FileHelper;
@@ -107,7 +108,8 @@ class Request extends ActiveRecord
             [['userId', 'language', 'dateAdded', 'status'], 'integer'],
             [['participants', 'tags', 'platforms'], 'string'],
             [['cost'], 'number'],
-            [['bookName', 'authorName', 'synopsis', 'license', 'category', 'cover', 'file'], 'string', 'max' => 255]
+            [['bookName', 'authorName', 'license', 'category', 'cover', 'file'], 'string', 'max' => 255],
+            [['synopsis'], 'string', 'min' => 500]
         ];
     }
 

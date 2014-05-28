@@ -4,6 +4,9 @@ namespace app\controllers;
 
 use app\components\Controller;
 use app\models\Request;
+use yii\data\ActiveDataProvider;
+use yii\data\Pagination;
+use yii\data\Sort;
 use yii\filters\AccessControl;
 use yii\helpers\FileHelper;
 use yii\web\HttpException;
@@ -40,7 +43,7 @@ class RequestsController extends Controller
             if (!$request) {
                 throw new HttpException(404);
             }
-            if ($request->userId != \Yii::$app->user->identity->user->id || \Yii::$app->user->identity->user->role != 'admin') {
+            if ($request->userId != $this->user->id || $this->user->role != 'admin') {
                 throw new HttpException(403);
             }
             $request->platforms = json_decode($request->platforms, true);
@@ -91,5 +94,58 @@ class RequestsController extends Controller
         }
 
         return $this->render('add', ['request' => $request]);
+    }
+
+    public function actionList()
+    {
+        $query = Request::find();
+        if ($this->user->role != 'admin') {
+            $query->andWhere(['userId' => $this->user->id]);
+        }
+        $sort = new Sort();
+        $sort->attributes = [
+            'id',
+            'dateAdded'
+        ];
+        $sort->defaultOrder = ['dateAdded' => SORT_DESC];
+
+        $sort = new Sort(
+            [
+                'attributes'   => [
+                    'id',
+                    'dateAdded',
+                    'bookName'
+                ],
+                'defaultOrder' => [
+                    'dateAdded' => SORT_DESC
+                ]
+            ]
+        );
+
+
+        $dataProvider = new ActiveDataProvider(
+            [
+                'sort'       => $sort,
+                'query'      => $query,
+                'pagination' => [
+                    'pageSize' => 20,
+                ],
+            ]
+        );
+
+        return $this->render('list', ['dataProvider' => $dataProvider]);
+    }
+
+    public function actionRequestDelete($requestId)
+    {
+        $request = Request::findOne($requestId);
+        if (!$request) {
+            throw new HttpException(404);
+        }
+        if ($request->userId != $this->user->id || $this->user->role != 'admin') {
+            throw new HttpException(403);
+        }
+        $request->delete();
+        $this->redirect(['list']);
     }
 } 

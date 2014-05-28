@@ -40,10 +40,15 @@ AppAsset::register($this);
             'options' => ['class' => 'navbar-nav navbar-right'],
             'items'   => [
                 ['label' => 'Home', 'url' => ['/site/index']],
-                ['label' => 'About', 'url' => ['/site/about']],
-                ['label'   => 'Add Request',
-                 'url'     => ['/requests/request-form'],
-                 'visible' => !\Yii::$app->user->isGuest
+                [
+                    'label'   => 'Список запросов',
+                    'url'     => ['/requests/list'],
+                    'visible' => !\Yii::$app->user->isGuest
+                ],
+                [
+                    'label'   => 'Добавить запрос',
+                    'url'     => ['/requests/request-form'],
+                    'visible' => !\Yii::$app->user->isGuest
                 ],
                 [
                     'label'   => 'Logout (' . (Yii::$app->user->isGuest ? '' : \Yii::$app->user->identity->user->name) . ')',

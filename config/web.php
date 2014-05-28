@@ -6,6 +6,7 @@ $db = require(__DIR__ . '/db.php');
 $config = [
     'id'         => 'basic',
     'name'       => 'Selfpub',
+    'language'   => 'ru_RU',
     'basePath'   => dirname(__DIR__),
     'bootstrap'  => ['log'],
     'extensions' => require(__DIR__ . '/../vendor/yiisoft/extensions.php'),

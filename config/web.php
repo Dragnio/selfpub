@@ -28,8 +28,8 @@ $config = [
             'errorAction' => 'site/error',
         ],
         'mail'         => [
-            'class'            => 'yii\swiftmailer\Mailer',
-            'useFileTransport' => true,
+            'class'            => \yii\swiftmailer\Mailer::className(),
+            'useFileTransport' => false ,
             'messageConfig'    => [
                 'from'    => ['admin@selfpub.bwhost.ru' => 'SelfPub'], // this is needed for sending emails
                 'charset' => 'UTF-8',

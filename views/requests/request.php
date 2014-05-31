@@ -13,7 +13,7 @@ $langs = [
 ?>
 <div class="row">
     <div class="col-lg-2"><img src="<?= $request->getCoverUrl() ?>" alt="<?= $request->bookName ?>"
-                               class="thumbnail"/></div>
+                               class="thumbnail" style="max-width: 100%"/></div>
     <div class="col-lg-8">
         <p>Автор: <b><?= $request->authorName ?></b></p>
 

@@ -199,8 +199,8 @@ class Request extends ActiveRecord
                         ['requests/view', ['requestId' => $this->id]]
                     );
                 TwitterHelper::post($status);
-                return true;
             }
+            return true;
         } else {
             return false;
         }

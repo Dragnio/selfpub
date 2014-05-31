@@ -108,8 +108,10 @@ a.desc:after {
     margin-bottom: 10px;
     text-align: center;
     margin-right: 10px;
+    height: 500px;
 }
 
 .request img {
     max-width: 80%;
+    max-height: 80%;
 }

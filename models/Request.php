@@ -196,7 +196,7 @@ class Request extends ActiveRecord
         if (parent::beforeSave($insert)) {
             if (isset($this->dirtyAttributes['status']) && $this->status == self::STATUS_ACCEPTED) {
                 $status = "We have new book - \"" . $this->bookName . "\". See it here - " . \Yii::$app->urlManager->createAbsoluteUrl(
-                        ['requests/view', ['requestId' => $this->id]]
+                        ['requests/view', 'requestId' => $this->id]
                     );
                 TwitterHelper::post($status);
             }

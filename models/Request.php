@@ -198,6 +198,10 @@ class Request extends ActiveRecord
                 $status = "We have new book - \"" . $this->bookName . "\". See it here - " . \Yii::$app->urlManager->createAbsoluteUrl(
                         ['requests/view', 'requestId' => $this->id]
                     );
+                $tags = explode(",", $this->tags);
+                foreach ($tags as $tag) {
+                    $status .= " #" . trim($tag);
+                }
                 TwitterHelper::post($status);
             }
             return true;

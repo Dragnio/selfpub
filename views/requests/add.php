@@ -89,7 +89,7 @@ if ($request->errors) {
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <?= $form->field($request, 'tags')->textInput(['disabled' => !$canEdit]) ?>
+            <?= $form->field($request, 'tags')->hint('Через запятую')->textInput(['disabled' => !$canEdit]) ?>
         </div>
     </div>
     <div class="row">

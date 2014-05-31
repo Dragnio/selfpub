@@ -19,7 +19,8 @@
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "yiisoft/yii2-redis": "dev-master",
-        "amnah/yii2-user": "~2.0"
+        "amnah/yii2-user": "~2.0",
+        "j7mbo/twitter-api-php": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

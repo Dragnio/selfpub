@@ -177,4 +177,14 @@ class RequestsController extends Controller
         }
         return $this->redirect(['request-form', 'requestId' => $request->id, '#' => 'comment' . $comment->id]);
     }
+
+    public function actionView($requestId)
+    {
+        $request = Request::findOne($requestId);
+        if (!$request || $request->status != Request::STATUS_ACCEPTED) {
+            throw new HttpException(404);
+        }
+
+        return $this->render('request', ['request' => $request]);
+    }
 } 

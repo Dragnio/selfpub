@@ -4,6 +4,7 @@ namespace app\models;
 
 use amnah\yii2\user\models\User;
 use app\components\ActiveRecord;
+use app\helpers\TwitterHelper;
 use Yii;
 use yii\helpers\FileHelper;
 
@@ -188,5 +189,20 @@ class Request extends ActiveRecord
         return $this->hasOne(Comment::className(), ['requestId' => 'id'])->inverseOf('request')->andWhere(
             ['parentId' => 0]
         )->orderBy(['dateAdded' => SORT_DESC]);
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if (isset($this->dirtyAttributes['status']) && $this->status == self::STATUS_ACCEPTED) {
+                $status = "We have new book - \"" . $this->bookName . "\". See it here - " . \Yii::$app->urlManager->createAbsoluteUrl(
+                        ['requests/view', ['requestId' => $this->id]]
+                    );
+                TwitterHelper::post($status);
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 }

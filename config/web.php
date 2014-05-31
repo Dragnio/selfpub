@@ -52,6 +52,10 @@ $config = [
             'rules'           => [
                 //default
                 [
+                    'pattern' => 'requests/<requestId:\d+>',
+                    'route'   => 'requests/view'
+                ],
+                [
                     'pattern' => '<controller:\w+>/<action:\w+>',
                     'route'   => '<controller>/<action>'
                 ],

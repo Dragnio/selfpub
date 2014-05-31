@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\components\Controller;
+use app\models\Comment;
 use app\models\Request;
 use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
@@ -148,5 +149,32 @@ class RequestsController extends Controller
         }
         $request->delete();
         $this->redirect(['list']);
+    }
+
+    public function actionCommentForm($requestId)
+    {
+        $request = Request::findOne($requestId);
+        if (!$request) {
+            throw new HttpException(404);
+        }
+        if ($request->userId != $this->user->id && !$this->user->can("admin")) {
+            throw new HttpException(403);
+        }
+
+        $comment = new Comment();
+        $comment->requestId = $request->id;
+        $comment->dateAdded = time();
+        $comment->parentId = 0;
+        $comment->userId = $this->user->id;
+
+        if (\Yii::$app->request->isPost) {
+            $comment->load(\Yii::$app->request->post());
+            if ($comment->validate()) {
+                $comment->save();
+            } else {
+                \Yii::$app->session->setFlash('commentError', $comment->getErrors());
+            }
+        }
+        return $this->redirect(['request-form', 'requestId' => $request->id, '#' => 'comment' . $comment->id]);
     }
 } 

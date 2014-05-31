@@ -28,6 +28,7 @@ use yii\helpers\FileHelper;
  * @property integer   $status
  *
  * @property Comment[] $comments
+ * @property Comment   $lastComment
  * @property User      $user
  */
 class Request extends ActiveRecord
@@ -177,5 +178,15 @@ class Request extends ActiveRecord
     public function getFileUrl()
     {
         return "/content/books/" . $this->id . "/" . $this->file;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLastComment()
+    {
+        return $this->hasOne(Comment::className(), ['requestId' => 'id'])->inverseOf('request')->andWhere(
+            ['parentId' => 0]
+        )->orderBy(['dateAdded' => SORT_DESC]);
     }
 }

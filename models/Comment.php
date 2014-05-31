@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use amnah\yii2\user\models\User;
 use app\components\ActiveRecord;
 use Yii;
 

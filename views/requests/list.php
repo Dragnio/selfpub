@@ -32,6 +32,21 @@ echo GridView::widget(
                 }
             ],
             [
+                'label'     => 'Последний комментарий',
+                'attribute' => 'lastComment.comment',
+                'format'    => 'text',
+                'value'     => function ($model, $index, $widget) {
+                    /**
+                     * @var Request $model
+                     */
+                    $comment = $model->lastComment;
+                    if (!$comment) {
+                        return "-";
+                    }
+                    return $comment->user->displayName . ": " . $comment->comment;
+                }
+            ],
+            [
                 'class'      => ActionColumn::className(),
                 'template'   => '{update} {delete}',
                 'urlCreator' => function ($action, $model, $key, $index) {

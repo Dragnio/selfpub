@@ -14,7 +14,9 @@ $form = ActiveForm::begin(
         'options' => array('enctype' => 'multipart/form-data')
     ]
 );
-$canEdit = $this->context->user->can("admin") || ($this->context->user->id == $request->userId && $request->status < Request::STATUS_IN_PROCESS);
+$canEdit = $this->context->user->can(
+        "admin"
+    ) || ($this->context->user->id == $request->userId && $request->status < Request::STATUS_IN_PROCESS);
 ?>
 <?php
 if ($request->errors) {
@@ -149,9 +151,43 @@ if ($this->context->user->can("admin")) {
 <?php
 }
 ?>
-<?= Html::submitButton(
+<?=
+Html::submitButton(
     $request->isNewRecord ? 'Добавить' : 'Сохранить',
     ['class' => 'btn btn-primary', 'disabled' => !$canEdit]
 ) ?>
 <?php
 $form->end();
+if (!$request->isNewRecord) {
+    ?>
+    <h2>Комментарии</h2>
+    <?php
+    $comments = $request->getComments()->where(['parentId' => 0])->all();
+    if ($comments) {
+        foreach ($comments as $comment) {
+            echo $this->render('@app/views/requests/comment', ['request' => $request, 'comment' => $comment]);
+        }
+    } else {
+        ?>
+        <p>Будьте первым, кто оставит комментарий</p>
+    <?php
+    }
+    ?>
+    <div class="form" style="margin-top: 15px">
+        <?php
+        $newComment = new \app\models\Comment();
+        $form = ActiveForm::begin(
+            [
+                'action' => \Yii::$app->urlManager->createUrl(['requests/comment-form', 'requestId' => $request->id]),
+            ]
+        );
+        echo $form->field($newComment, 'comment')->textarea();
+        echo Html::submitButton(
+            'Добавить',
+            ['class' => 'btn btn-primary']
+        );
+        $form->end();
+        ?>
+    </div>
+<?php
+}

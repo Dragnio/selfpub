@@ -107,4 +107,9 @@ a.desc:after {
     border-radius: 4px;
     margin-bottom: 10px;
     text-align: center;
+    margin-right: 10px;
+}
+
+.request img {
+    max-width: 80%;
 }

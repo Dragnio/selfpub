@@ -195,9 +195,7 @@ class Request extends ActiveRecord
     {
         if (parent::beforeSave($insert)) {
             if (isset($this->dirtyAttributes['status']) && $this->status == self::STATUS_ACCEPTED) {
-                $status = "We have new book - \"" . $this->bookName . "\". See it here - " . \Yii::$app->urlManager->createAbsoluteUrl(
-                        ['requests/view', 'requestId' => $this->id]
-                    );
+                $status = "We have new book - \"" . $this->bookName . "\". See it here - " . $this->publicUrl;
                 $tags = explode(",", $this->tags);
                 foreach ($tags as $tag) {
                     $status .= " #" . trim($tag);
@@ -208,5 +206,12 @@ class Request extends ActiveRecord
         } else {
             return false;
         }
+    }
+
+    public function getPublicUrl()
+    {
+        return \Yii::$app->urlManager->createAbsoluteUrl(
+            ['requests/view', 'requestId' => $this->id]
+        );
     }
 }

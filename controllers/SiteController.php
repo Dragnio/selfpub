@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\components\Controller;
+use app\models\Request;
 use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
@@ -48,6 +49,9 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $requests = Request::find()->where(['status' => Request::STATUS_ACCEPTED])->orderBy(
+            ['dateAdded' => SORT_DESC]
+        )->all();
+        return $this->render('index', ['requests' => $requests]);
     }
 }

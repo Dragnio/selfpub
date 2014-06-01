@@ -3,7 +3,7 @@
  * @var yii\web\View          $this
  * @var \app\models\Request[] $requests
  */
-$this->title = \Yii::$app->name . " - Опубликованные книги";
+$this->title = \Yii::$app->name . " - Published Books";
 ?>
 <div class="site-index">
     <div class="row">
@@ -16,7 +16,7 @@ $this->title = \Yii::$app->name . " - Опубликованные книги";
                 </h3>
                 <img src="<?= $request->getCoverUrl() ?>" alt="<?= $request->bookName ?>"/><br/>
 
-                <p>Автор: <b><?= $request->authorName ?></b></p>
+                <p>Author's name: <b><?= $request->authorName ?></b></p>
             </div>
         <?php
         }

@@ -51,23 +51,39 @@ class Request extends ActiveRecord
         'gif'
     ];
 
+    public static $languages = [
+        'Russian',
+        'English',
+        'Ukrainian'
+    ];
+
+    public static $platforms = [
+        'Amazon',
+        'Google Books',
+        'Barnes & Noble',
+        'SelfPub Inc'
+    ];
+
     const STATUS_WAITING = 0;
     const STATUS_IN_PROCESS = 1;
-    const STATUS_ACCEPTED = 2;
-    const STATUS_DECLINED = 3;
+    const STATUS_IN_PROCESS_ALLOW_EDIT = 2;
+    const STATUS_ACCEPTED = 3;
+    const STATUS_DECLINED = 4;
 
     public static $statuses = [
-        self::STATUS_WAITING    => 'Не рассмотрено',
-        self::STATUS_IN_PROCESS => 'В процессе',
-        self::STATUS_ACCEPTED   => 'Завершено и принято',
-        self::STATUS_DECLINED   => 'Завершено и отклонено',
+        self::STATUS_WAITING               => 'Not processed',
+        self::STATUS_IN_PROCESS            => 'In the process',
+        self::STATUS_IN_PROCESS_ALLOW_EDIT => 'In the process - Changes Allowed',
+        self::STATUS_ACCEPTED              => 'Completed and accepted',
+        self::STATUS_DECLINED              => 'Completed and declined',
     ];
 
     public static $statusClasses = [
-        self::STATUS_WAITING    => 'default',
-        self::STATUS_IN_PROCESS => 'warning',
-        self::STATUS_ACCEPTED   => 'success',
-        self::STATUS_DECLINED   => 'danger',
+        self::STATUS_WAITING               => 'default',
+        self::STATUS_IN_PROCESS            => 'warning',
+        self::STATUS_IN_PROCESS_ALLOW_EDIT => 'info',
+        self::STATUS_ACCEPTED              => 'success',
+        self::STATUS_DECLINED              => 'danger',
     ];
 
     /**
@@ -95,7 +111,8 @@ class Request extends ActiveRecord
                     'tags',
                     'platforms',
                     'cost',
-                    'dateAdded'
+                    'dateAdded',
+                    'license'
                 ],
                 'required'
             ],
@@ -110,7 +127,8 @@ class Request extends ActiveRecord
             [['userId', 'language', 'dateAdded', 'status'], 'integer'],
             [['participants', 'tags', 'platforms'], 'string'],
             [['cost'], 'number'],
-            [['bookName', 'authorName', 'license', 'category', 'cover', 'file'], 'string', 'max' => 255],
+            [['license', 'category', 'cover', 'file'], 'string', 'max' => 255],
+            [['bookName', 'authorName'], 'string', 'max' => 100],
             [['synopsis'], 'string', 'min' => 500]
         ];
     }
@@ -123,20 +141,20 @@ class Request extends ActiveRecord
         return [
             'id'           => 'ID',
             'userId'       => 'User ID',
-            'bookName'     => 'Название книги',
-            'authorName'   => 'Имя автора',
-            'synopsis'     => 'Синопсис',
-            'participants' => 'Участники',
-            'language'     => 'Язык',
-            'license'      => 'Лицензия',
-            'category'     => 'Категория',
-            'tags'         => 'Тэги',
-            'cover'        => 'Обложка',
-            'file'         => 'Файл книги',
-            'platforms'    => 'Платформы',
-            'cost'         => 'Цена',
-            'dateAdded'    => 'Дата добавления',
-            'status'       => 'Статус',
+            'bookName'     => 'Title of book',
+            'authorName'   => 'Author\'s name',
+            'synopsis'     => 'Synopsis',
+            'participants' => 'Participants',
+            'language'     => 'Language',
+            'license'      => 'License ',
+            'category'     => 'Category',
+            'tags'         => 'Tags',
+            'cover'        => 'Cover',
+            'file'         => 'Book file',
+            'platforms'    => 'Platforms',
+            'cost'         => 'Price',
+            'dateAdded'    => 'Date Added',
+            'status'       => 'Status',
         ];
     }
 

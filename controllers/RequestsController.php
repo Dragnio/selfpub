@@ -10,6 +10,7 @@ use yii\data\Pagination;
 use yii\data\Sort;
 use yii\filters\AccessControl;
 use yii\helpers\FileHelper;
+use yii\imagine\Image;
 use yii\web\HttpException;
 use yii\web\UploadedFile;
 
@@ -63,7 +64,7 @@ class RequestsController extends Controller
             if ($file->size > 0 && !in_array($file->extension, Request::$fileExtensions)) {
                 $request->addError(
                     'file',
-                    'Файл книги должен быть в одном из следующих форматов: ' . implode(',', Request::$fileExtensions)
+                    'Book file should in one if this formats: ' . implode(',', Request::$fileExtensions)
                 );
             } elseif ($file->size == 0 && !$request->isNewRecord) {
                 $request->file = $oldFile;
@@ -71,11 +72,34 @@ class RequestsController extends Controller
                 $request->file = $file->name;
             }
             $cover = UploadedFile::getInstance($request, 'cover');
-            if ($cover->size > 0 && !in_array($cover->extension, Request::$coverExtensions)) {
-                $request->addError(
-                    'cover',
-                    'Файл обложки должен быть в одном из следующих форматов: ' . implode(',', Request::$coverExtensions)
-                );
+            if ($cover->size > 0) {
+                if (!in_array($cover->extension, Request::$coverExtensions)) {
+                    $request->addError(
+                        'cover',
+                        'Cover file should in one if this formats: ' . implode(
+                            ',',
+                            Request::$coverExtensions
+                        )
+                    );
+                }
+                $imagine = Image::getImagine();
+                $image = $imagine->open($cover->tempName);
+                $size = $image->getSize();
+                if ($size->getHeight() > 1000) {
+                    $request->addError(
+                        'cover',
+                        'Cover height should be <= 1000px'
+                    );
+                }
+                if ($size->getWidth() > 1000) {
+                    $request->addError(
+                        'cover',
+                        'Cover width should be <= 1000px'
+                    );
+                }
+                if (!$request->hasErrors('cover')) {
+                    $request->cover = $cover->name;
+                }
             } elseif ($cover->size == 0 && !$request->isNewRecord) {
                 $request->cover = $oldCover;
             } else {

@@ -9,13 +9,13 @@ use yii\grid\GridView;
  * @var \yii\web\View      $this
  */
 
-$this->title = "Запросы";
+$this->title = "Requests";
 echo GridView::widget(
     [
         'dataProvider' => $dataProvider,
         'columns'      => [
             'id',
-            ['attribute' => 'user.displayName', 'label' => 'Пользователь'],
+            ['attribute' => 'user.displayName', 'label' => 'User'],
             'bookName',
             [
                 'attribute' => 'dateAdded',
@@ -32,7 +32,7 @@ echo GridView::widget(
                 }
             ],
             [
-                'label'     => 'Последний комментарий',
+                'label'     => 'Last comment',
                 'attribute' => 'lastComment.comment',
                 'format'    => 'text',
                 'value'     => function ($model, $index, $widget) {

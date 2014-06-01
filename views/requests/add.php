@@ -7,7 +7,7 @@ use app\models\Request;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
-$this->title = $request->isNewRecord ? "Добавить запрос" : "Запрос " . $request->bookName;
+$this->title = $request->isNewRecord ? "Add request" : "Request " . $request->bookName;
 $form = ActiveForm::begin(
     [
         'action'  => \Yii::$app->urlManager->createUrl(['requests/request-form', 'requestId' => $request->id]),
@@ -16,7 +16,9 @@ $form = ActiveForm::begin(
 );
 $canEdit = $this->context->user->can(
         "admin"
-    ) || ($this->context->user->id == $request->userId && $request->status < Request::STATUS_IN_PROCESS);
+    ) || ($this->context->user->id == $request->userId &&
+        ($request->status == Request::STATUS_IN_PROCESS_ALLOW_EDIT || $request->status == Request::STATUS_WAITING)
+    );
 ?>
 <?php
 if ($request->errors) {
@@ -56,7 +58,9 @@ if ($request->errors) {
     <div class="row">
         <div class="col-lg-6">
             <?=
-            $form->field($request, 'participants')->hint('Вася - Художник<br />Петя - Писатель')->textarea(
+            $form->field($request, 'participants')->hint(
+                'Example: Andrew - artist, Sergey - the editor and so on.'
+            )->textarea(
                 ['disabled' => !$canEdit]
             ) ?>
         </div>
@@ -65,10 +69,7 @@ if ($request->errors) {
         <div class="col-lg-6">
             <?=
             $form->field($request, 'language')->dropDownList(
-                [
-                    'Русский',
-                    'Английский'
-                ],
+                Request::$languages,
                 ['disabled' => !$canEdit]
             ) ?>
         </div>
@@ -77,7 +78,7 @@ if ($request->errors) {
         <div class="col-lg-6">
             <?=
             $form->field($request, 'license')->radioList(
-                ['Своя книга', 'Общественное достояние'],
+                ['Public domain', 'I am the owner of the book'],
                 ['disabled' => !$canEdit]
             ) ?>
         </div>
@@ -89,37 +90,38 @@ if ($request->errors) {
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <?= $form->field($request, 'tags')->hint('Через запятую')->textInput(['disabled' => !$canEdit]) ?>
+            <?= $form->field($request, 'tags')->hint('Separated by commas')->textInput(['disabled' => !$canEdit]) ?>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-3">
             <?php
-            $coverField = $form->field($request, 'cover');
+            $coverField = $form->field($request, 'cover')->hint(
+                'The maximum dimensions are 1000 pixels (width) x 1000 pixels (height)'
+            );
             if ($request->cover != '') {
-                $coverField->hint('Загружен файл ' . $request->cover);
+                $coverField->hint(
+                    'The maximum dimensions are 1000 pixels (width) x 1000 pixels (height). <br />Uploaded file: ' . $request->cover
+                );
             }
             echo $coverField->fileInput(['disabled' => !$canEdit]);
             ?>
             <?php
-            $fileField = $form->field($request, 'file');
+            $hint = 'Supported formats: ' . implode(", ", Request::$fileExtensions);
+            $fileField = $form->field($request, 'file')->hint($hint);
             if ($request->file != '') {
-                $fileField->hint('Загружен файл ' . $request->file);
+                $fileField->hint($hint . '.<br />Uploaded file: ' . $request->file);
             }
             echo $fileField->fileInput(['disabled' => !$canEdit]);
             if ($request->file != '') {
                 ?>
-                <a class="btn btn-success" href="<?= $request->getFileUrl() ?>">Скачать</a><br/><br/>
+                <a class="btn btn-success" href="<?= $request->getFileUrl() ?>">Download</a><br/><br/>
             <?php
             }
             ?>
             <?=
             $form->field($request, 'platforms')->checkboxList(
-                [
-                    'Amazon',
-                    'Amazon2',
-                    'Amazon3'
-                ],
+                Request::$platforms,
                 ['disabled' => !$canEdit]
             ) ?>
         </div>
@@ -142,7 +144,7 @@ if ($request->errors) {
 <?php
 if ($this->context->user->can("admin")) {
     ?>
-    <h2>Управление</h2>
+    <h2>Control</h2>
     <div class="row">
         <div class="col-lg-6">
             <?= $form->field($request, 'status')->dropDownList(Request::$statuses) ?>
@@ -153,14 +155,14 @@ if ($this->context->user->can("admin")) {
 ?>
 <?=
 Html::submitButton(
-    $request->isNewRecord ? 'Добавить' : 'Сохранить',
+    $request->isNewRecord ? 'Add' : 'Save',
     ['class' => 'btn btn-primary', 'disabled' => !$canEdit]
 ) ?>
 <?php
 $form->end();
 if (!$request->isNewRecord) {
     ?>
-    <h2>Комментарии</h2>
+    <h2>Comment</h2>
     <?php
     $comments = $request->getComments()->where(['parentId' => 0])->all();
     if ($comments) {
@@ -169,7 +171,7 @@ if (!$request->isNewRecord) {
         }
     } else {
         ?>
-        <p>Будьте первым, кто оставит комментарий</p>
+        <p>What about leave a comment?</p>
     <?php
     }
     ?>
@@ -183,7 +185,7 @@ if (!$request->isNewRecord) {
         );
         echo $form->field($newComment, 'comment')->textarea();
         echo Html::submitButton(
-            'Добавить',
+            'Add',
             ['class' => 'btn btn-primary']
         );
         $form->end();

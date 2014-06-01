@@ -41,24 +41,24 @@ AppAsset::register($this);
             'items'   => [
                 ['label' => 'Home', 'url' => ['/site/index']],
                 [
-                    'label'   => 'Список запросов',
+                    'label'   => 'List of requests',
                     'url'     => ['/requests/list'],
                     'visible' => !\Yii::$app->user->isGuest
                 ],
                 [
-                    'label'   => 'Добавить запрос',
+                    'label'   => 'Add request',
                     'url'     => ['/requests/request-form'],
                     'visible' => !\Yii::$app->user->isGuest
                 ],
                 [
-                    'label'   => 'Профиль',
+                    'label'   => 'Account',
                     'url'     => ['/user/account'],
                     'visible' => !\Yii::$app->user->isGuest
                 ],
                 Yii::$app->user->isGuest ?
-                    ['label' => 'Войти', 'url' => ['/user/login']] :
+                    ['label' => 'Login', 'url' => ['/user/login']] :
                     [
-                        'label'       => 'Выход',
+                        'label'       => 'Logout',
                         'url'         => ['/user/logout'],
                         'linkOptions' => ['data-method' => 'post']
                     ],
@@ -69,7 +69,14 @@ AppAsset::register($this);
     ?>
 
     <div class="container">
-        <h1><?= $this->title ?></h1>
+        <?php
+        if (!($this->context->module instanceof \amnah\yii2\user\Module)) {
+            ?>
+            <h1><?= $this->title ?></h1>
+        <?php
+        }
+        ?>
+
         <?php if ($error = \Yii::$app->session->getFlash('error')) {
             echo Alert::widget(
                 [
@@ -80,19 +87,13 @@ AppAsset::register($this);
                 ]
             );
         } ?>
-        <?=
-        Breadcrumbs::widget(
-            [
-                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-            ]
-        ) ?>
         <?= $content ?>
     </div>
 </div>
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; SelfPub Inc. <?= date('Y') ?></p>
 
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>

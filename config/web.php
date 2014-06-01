@@ -5,8 +5,8 @@ $db = require(__DIR__ . '/db.php');
 
 $config = [
     'id'         => 'basic',
-    'name'       => 'Selfpub',
-    'language'   => 'ru_RU',
+    'name'       => 'SelfPub Inc.',
+    'language'   => 'en_US',
     'basePath'   => dirname(__DIR__),
     'bootstrap'  => ['log'],
     'extensions' => require(__DIR__ . '/../vendor/yiisoft/extensions.php'),
@@ -29,7 +29,7 @@ $config = [
         ],
         'mail'         => [
             'class'            => \yii\swiftmailer\Mailer::className(),
-            'useFileTransport' => false ,
+            'useFileTransport' => false,
             'messageConfig'    => [
                 'from'    => ['admin@selfpub.bwhost.ru' => 'SelfPub'], // this is needed for sending emails
                 'charset' => 'UTF-8',

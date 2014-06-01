@@ -129,7 +129,7 @@ if ($request->errors) {
             <?php
             if ($request->cover != '') {
                 ?>
-                <img src="<?= $request->getCoverUrl() ?>" alt="Обложка"/>
+                <img class="thumbnail" style="max-width: 260px;" src="<?= $request->getCoverUrl() ?>" alt="Обложка"/>
             <?php
             }
             ?>
